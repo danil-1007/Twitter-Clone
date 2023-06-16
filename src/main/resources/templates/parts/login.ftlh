@@ -1,6 +1,5 @@
 <#include "security.ftlh">
 <#macro login path isRegisterForm>
-
     <form action="${path}" method="post">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label"> User Name : </label>
@@ -28,14 +27,13 @@
                 </#if>
             </div>
         </div>
-
         <#if isRegisterForm>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"> Password: </label>
                 <div class="col-sm-6">
                     <input type="password" name="password2"
                            class="form-control ${(password2Error??)?string('is-invalid','') }"
-                           placeholder="Retype Password"/>
+                           placeholder="Retype Password" />
                     <#if password2Error??>
                         <div class="invalid-feedback">
                             ${password2Error}
@@ -43,7 +41,6 @@
                     </#if>
                 </div>
             </div>
-
         <div class="form-group row">
             <label class="col-sm-2 col-form-label"> Email:  </label>
             <div class="col-sm-6">
@@ -69,9 +66,7 @@
                     Sign in
             </#if>
         </button>
-
     </form>
-
 </#macro>
 
 <#macro logout>

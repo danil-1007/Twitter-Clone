@@ -20,13 +20,10 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepo userRepo;
-
     @Autowired
     private MailSender mailSender;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username);
@@ -35,19 +32,15 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
-
     public boolean addUser(User user){
         User userFromDb = userRepo.findByUsername(user.getUsername());
-
         if(userFromDb != null){
             return false;
         }
-
-        user.setActive(false);
+        user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         userRepo.save(user);
         sendMessage(user);
         return true;
@@ -56,19 +49,20 @@ public class UserService implements UserDetailsService {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to Twitter Clone. Please, visit next link: http://localhost:8000/activate/%s",
+                            "Welcome to Twitter Clone." +
+                            " Please, visit next link:" +
+                            " http://localhost:8000/activate/%s",
                     user.getUsername(),
                     user.getActivationCode()
             );
-
             mailSender.send(user.getEmail(), "Activation code", message);
         }
-
     }
 
     public boolean activateUser(String code) {
         User user = userRepo.findByActivationCode(code);//find by activation code
         user.setActive(true);
+
         if (user == null) {
             return false;
         }
